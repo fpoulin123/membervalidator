@@ -96,13 +96,13 @@ public class PrincipalFrame extends JFrame{
 									customerLbl.setText(member.firstName + " " + member.lastName + " - " + customerNumber);
 									vlidPanel.setBackground(Color.GREEN);
 									vlidPanel.setBorder(BorderFactory.createBevelBorder(ABORT, Color.DARK_GRAY, Color.LIGHT_GRAY));
-									audioPlayer.play("./ok.wav");
+									audioPlayer.play("./ok_16.wav");
 								}else {
 									setValidationPanelSize(vlidPanel, contentPane);
 									customerLbl.setText("");
 									vlidPanel.setBackground(Color.RED);
 									vlidPanel.setBorder(BorderFactory.createBevelBorder(ABORT, Color.DARK_GRAY, Color.LIGHT_GRAY));
-									audioPlayer.play("./not_ok.wav");
+									audioPlayer.play("./not_ok_16.wav");
 								}
 							} catch (SQLException e) {
 								
