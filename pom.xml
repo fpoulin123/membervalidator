@@ -47,7 +47,7 @@
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>memberchecker.Start</mainClass>
+							<mainClass>membervalidator.Start</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

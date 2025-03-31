@@ -2,13 +2,13 @@ package membervalidator;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.HeadlessException;
 import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,19 +24,10 @@ public class PrincipalFrame extends JFrame{
 	public PrincipalFrame() throws HeadlessException {
 		super();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		Dimension dim = new Dimension();
-		dim.setSize(700, 500);
-		this.setSize(dim);
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		
-		Container contentPane = this.getContentPane();
 				
-		contentPane.setLayout(null);
-		
 		JTextField customerField = new JTextField();
 		
-		customerField.setSize(new Dimension(100,20));
+		customerField.setSize(new Dimension(20,20));
 		customerField.setLocation(20,20);
 		
 		JLabel customerLbl = new JLabel();
@@ -44,21 +35,32 @@ public class PrincipalFrame extends JFrame{
 		customerLbl.setVisible(true);
 		customerLbl.setLocation(20,40);
 		
-		JPanel vlidPanel = new JPanel();
-		vlidPanel.setVisible(true);
-		vlidPanel.setSize(200,100);
-		contentPane.getSize();
-		
-		vlidPanel.setLocation(20,60);
-		
-		
-		contentPane.add(customerField);
-		
-		contentPane.add(customerLbl);
+		JPanel validPanel = new JPanel();
 				
-		contentPane.add(vlidPanel);
+		validPanel.setVisible(true);
+		validPanel.setLocation(20,60);
+		
+		JLabel messageLbl = new JLabel();
+		
+		messageLbl.setVisible(true);
+		
+		messageLbl.setText("Veuillez scanner votre carte de membre, SVP.");
+		
+		Font lblFont = new Font("Serif", Font.PLAIN, 40);
+		messageLbl.setFont(lblFont);
 		
 		
+		
+		validPanel.add(messageLbl);
+		
+		this.add(customerField);
+		
+		this.add(customerLbl);
+				
+		this.add(validPanel);
+		
+		setValidationPanelSize(validPanel);
+				
 		customerField.getDocument().addDocumentListener(new DocumentListener() {
 			
 			@Override
@@ -78,8 +80,7 @@ public class PrincipalFrame extends JFrame{
 				check();
 				
 			}
-			
-						
+				
 			private void check() {
                 Runnable doAssist = new Runnable() {
                     @Override
@@ -92,18 +93,18 @@ public class PrincipalFrame extends JFrame{
 								Customer member = checker.checkMemberValidity(customerNumber);
 								if(member!=null) {
 									
-									setValidationPanelSize(vlidPanel, contentPane);
-									customerLbl.setText(member.firstName + " " + member.lastName + " - " + customerNumber);
-									vlidPanel.setBackground(Color.GREEN);
-									vlidPanel.setBorder(BorderFactory.createBevelBorder(ABORT, Color.DARK_GRAY, Color.LIGHT_GRAY));
+									setValidationPanelSize(validPanel);
+									messageLbl.setText(member.firstName + " " + member.lastName + " - " + customerNumber);
+									validPanel.setBackground(Color.GREEN);
 									audioPlayer.play("./ok_16.wav");
 								}else {
-									setValidationPanelSize(vlidPanel, contentPane);
+									setValidationPanelSize(validPanel);
 									customerLbl.setText("");
-									vlidPanel.setBackground(Color.RED);
-									vlidPanel.setBorder(BorderFactory.createBevelBorder(ABORT, Color.DARK_GRAY, Color.LIGHT_GRAY));
+									validPanel.setBackground(Color.RED);
 									audioPlayer.play("./not_ok_16.wav");
+									messageLbl.setText("Carte de membre non reconnue ou abonnemnt non valide");
 								}
+								
 							} catch (SQLException e) {
 								
 								e.printStackTrace();
@@ -116,6 +117,9 @@ public class PrincipalFrame extends JFrame{
 							} catch (LineUnavailableException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
 							}
         					
         					customerField.setText("");
@@ -129,16 +133,21 @@ public class PrincipalFrame extends JFrame{
 
 		});
 		
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		this.setVisible(true);
 		
+		Double frameWidth = this.getSize().getWidth();
+		Double frameHeight =  this.getSize().getHeight();
+		System.out.println("Container size : " + frameWidth + ", " + frameHeight);
+		
 	}
 	
-	public void setValidationPanelSize(JPanel vlidPanel, Container contentPane) {
-		Double frameWidth = contentPane.getSize().getWidth();
-		Double frameHeight =  contentPane.getSize().getHeight();
-		
-		vlidPanel.setSize(frameWidth.intValue() - 40, frameHeight.intValue() - 80);
+	public void setValidationPanelSize(JPanel validPanel) {
+		Double frameWidth = this.getSize().getWidth();
+		Double frameHeight =  this.getSize().getHeight();
+		System.out.println("Container size : " + frameWidth + ", " + frameHeight);
+		validPanel.setSize(frameWidth.intValue() - 4, frameHeight.intValue() - 80);
 	}
 	
 
