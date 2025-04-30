@@ -37,7 +37,7 @@ public class PrincipalFrame extends JFrame{
 				
 		JTextField customerField = new JTextField();
 		
-		customerField.setSize(new Dimension(20,20));
+		customerField.setSize(new Dimension(100,20));
 		customerField.setLocation(20,20);
 		
 		JLabel customerLbl = new JLabel();
