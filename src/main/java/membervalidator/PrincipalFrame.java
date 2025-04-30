@@ -4,8 +4,12 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -21,8 +25,14 @@ public class PrincipalFrame extends JFrame{
 	
 	Checker checker = new Checker();
 	AudioPlayer audioPlayer = new AudioPlayer();
-	public PrincipalFrame() throws HeadlessException {
+	public PrincipalFrame() throws HeadlessException, IOException {
+		
+		
 		super();
+		File logFile = new File("./membervalidator.log");
+		
+		log(logFile, "Starting membervalidator");
+		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 				
 		JTextField customerField = new JTextField();
@@ -60,6 +70,9 @@ public class PrincipalFrame extends JFrame{
 		this.add(validPanel);
 		
 		setValidationPanelSize(validPanel);
+		
+		
+		
 				
 		customerField.getDocument().addDocumentListener(new DocumentListener() {
 			
@@ -95,10 +108,12 @@ public class PrincipalFrame extends JFrame{
 									
 									setValidationPanelSize(validPanel);
 									messageLbl.setText(member.firstName + " " + member.lastName + " - " + customerNumber);
+									log(logFile, "VALIDE: " + member.firstName + " " + member.lastName + " - " + customerNumber);
 									validPanel.setBackground(Color.GREEN);
 									audioPlayer.play("./ok_16.wav");
 								}else {
 									setValidationPanelSize(validPanel);
+									log(logFile, "NON VALIDE: " + customerNumber);
 									customerLbl.setText("");
 									validPanel.setBackground(Color.RED);
 									audioPlayer.play("./not_ok_16.wav");
@@ -137,18 +152,25 @@ public class PrincipalFrame extends JFrame{
 		
 		this.setVisible(true);
 		
-		Double frameWidth = this.getSize().getWidth();
-		Double frameHeight =  this.getSize().getHeight();
-		System.out.println("Container size : " + frameWidth + ", " + frameHeight);
-		
+				
 	}
 	
 	public void setValidationPanelSize(JPanel validPanel) {
 		Double frameWidth = this.getSize().getWidth();
 		Double frameHeight =  this.getSize().getHeight();
-		System.out.println("Container size : " + frameWidth + ", " + frameHeight);
 		validPanel.setSize(frameWidth.intValue() - 4, frameHeight.intValue() - 80);
 	}
 	
+	public void log(File logFile, String logMsg) throws IOException {
+		
+		if(!logFile.exists())logFile.createNewFile();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
+		FileWriter fileWriter = new FileWriter(logFile, true);
+		fileWriter.write("[" + sdf.format(new Date()) + "] " + logMsg + System.lineSeparator());
+		
+		fileWriter.flush();
+		fileWriter.close();
+		
+	}
 
 }
